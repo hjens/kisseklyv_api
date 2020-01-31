@@ -28,8 +28,7 @@ class KisseResource(flask_restful.Resource):
         if kisse is not None:
             kisse.description = args["description"]
             db.session.commit()
-            return {"message": "Kisse updated",
-                    "data": kisse.as_dict()}
+            return "", 200
         else:
             return "", 404
 
@@ -42,8 +41,7 @@ class KisseResource(flask_restful.Resource):
         if kisse is not None:
             db.session.delete(kisse)
             db.session.commit()
-            return {"message": "Kisse deleted",
-                    "data": kisse.as_dict()}, 204
+            return "", 204
         else:
             return "", 404
 
@@ -55,7 +53,7 @@ class KisseResource(flask_restful.Resource):
 
         kisse = db.session.query(models.Kisse).get(args["kisse_id"])
         if kisse is not None:
-            return {"message": "get kisse",
+            return {"message": "Get Kisse",
                     "data": kisse.as_dict()}
         else:
             return "", 404
@@ -94,5 +92,3 @@ class KisseKlyv(flask_restful.Resource):
         pass
 
 
-api = flask_restful.Api(app)
-api.add_resource(KisseResource, "/kisse")
