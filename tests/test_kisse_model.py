@@ -18,7 +18,8 @@ class KisseModelTest(unittest.TestCase):
         response = self.client.get("/kisse?kisse_id=1")
         expected_response = {"message": "Get Kisse",
                              "data": {"kisse_id": 1,
-                                      "description": "testkisse"}}
+                                      "description": "testkisse",
+                                      "people": []}}
         self.assertEqual(expected_response, response.get_json())
         self.assertEqual("200 OK", response.status)
 
@@ -30,14 +31,16 @@ class KisseModelTest(unittest.TestCase):
         response = self.client.post("/kisse?description=testkisse2")
         expected_response = {"message": "Kisse created",
                              "data": {"kisse_id": 2,
-                                      "description": "testkisse2"}}
+                                      "description": "testkisse2",
+                                      "people": []}}
         self.assertEqual(expected_response, response.get_json())
         self.assertEqual("201 CREATED", response.status)
 
         response = self.client.get("/kisse?kisse_id=2")
         expected_response = {"message": "Get Kisse",
                              "data": {"kisse_id": 2,
-                                      "description": "testkisse2"}}
+                                      "description": "testkisse2",
+                                      "people": []}}
         self.assertEqual(expected_response, response.get_json())
         self.assertEqual("200 OK", response.status)
 
