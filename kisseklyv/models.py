@@ -7,7 +7,8 @@ class Kisse(db.Model):
 
     def as_dict(self):
         return {
-            "kisse_id": self.id,
+            "object_type": "kisse",
+            "id": self.id,
             "description": self.description,
             "people": [person.name for person in self.people]
         }
@@ -23,6 +24,7 @@ class Person(db.Model):
 
     def as_dict(self):
         return {
+            "object_type": "person",
             "id": self.id,
             "name": self.name,
             "kisse_id": self.kisse_id
