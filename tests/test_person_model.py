@@ -19,7 +19,7 @@ class KisseModelTest(unittest.TestCase):
         response = self.client.get(f"/kisse?id={kisse_id}")
         json = response.get_json()
         people = json["people"]
-        return people
+        return [p["name"] for p in people]
 
     def test_post_valid_person(self):
         self.assertEqual([], self.get_people_from_kisse(kisse_id=1))
@@ -82,3 +82,7 @@ class KisseModelTest(unittest.TestCase):
                              "name": "Helge"}
         self.assertEqual(expected_response, get_response.get_json())
         self.assertEqual("200 OK", get_response.status)
+
+    def test_get_invalid_person(self):
+        response = self.client.get("/person?id=11")
+        self.assertEqual("404 NOT FOUND", response.status)

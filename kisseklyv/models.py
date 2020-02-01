@@ -10,7 +10,7 @@ class Kisse(db.Model):
             "object_type": "kisse",
             "id": self.id,
             "description": self.description,
-            "people": [person.name for person in self.people]
+            "people": [person.as_dict() for person in self.people]
         }
 
     def __repr__(self):
@@ -21,6 +21,7 @@ class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     kisse_id = db.Column(db.Integer, db.ForeignKey("kisse.id"))
+    expenses = db.relationship("Expense", backref="person", lazy="dynamic")
 
     def as_dict(self):
         return {
@@ -32,3 +33,20 @@ class Person(db.Model):
 
     def __repr__(self):
         return f"Person (id={self.id}): {self.name}. Kisse_id: {self.kisse_id}"
+
+
+class Expense(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(100))
+    person_id = db.Column(db.Integer, db.ForeignKey("person.id"))
+
+    def as_dict(self):
+        return {
+            "object_type": "expense",
+            "id": self.id,
+            "description": self.description,
+            "person_id": self.person_id
+        }
+
+    def __repr__(self):
+        return f"Expense (id={self.id}): {self.description}"
