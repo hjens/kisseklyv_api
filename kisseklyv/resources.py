@@ -125,17 +125,36 @@ class PersonResource(flask_restful.Resource):
 
 
 class ExpenseResource(flask_restful.Resource):
-    def get(self):
-        pass
-
     def post(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument("description", required=True)
+        parser.add_argument("amount", required=True)
+        parser.add_argument("person_id", required=True)
+        args = parser.parse_args()
+
+        expense = models.Expense(description=args["description"],
+                                 amount=args["amount"],
+                                 person_id=args["person_id"])
+        if not self._expense_person_exists(expense):
+            return f"No Person with id {expense.person_id} exists.", 400
+        else:
+            db.session.add(expense)
+            db.session.commit()
+
+            return expense.as_dict(), 201
 
     def put(self):
         pass
 
     def delete(self):
         pass
+
+    def get(self):
+        pass
+
+    def _expense_person_exists(self, expense: models.Expense) -> bool:
+        person = models.Person.query.get(expense.person_id)
+        return person is not None
 
 
 class KisseKlyv(flask_restful.Resource):
