@@ -144,21 +144,57 @@ class ExpenseResource(flask_restful.Resource):
             return expense.as_dict(), 201
 
     def put(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument("id")
+        parser.add_argument("description")
+        parser.add_argument("amount")
+        args = parser.parse_args()
+
+        expense = db.session.query(models.Expense).get(args["id"])
+        if expense is not None:
+            expense.description = args.get("description", expense.description)
+            expense.amount = args.get("amount", expense.amount)
+            db.session.commit()
+            return "", 200
+        else:
+            return "", 404
 
     def delete(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument("id", required=True)
+        args = parser.parse_args()
+
+        expense = db.session.query(models.Expense).get(args["id"])
+        if expense is not None:
+            db.session.delete(expense)
+            db.session.commit()
+            return "", 204
+        else:
+            return "", 404
 
     def get(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument("id")
+        args = parser.parse_args()
+
+        expense = db.session.query(models.Expense).get(args["id"])
+        if expense is not None:
+            return expense.as_dict()
+        else:
+            return "", 404
 
     def _expense_person_exists(self, expense: models.Expense) -> bool:
         person = models.Person.query.get(expense.person_id)
         return person is not None
 
 
-class KisseKlyv(flask_restful.Resource):
+class KisseKlyvResource(flask_restful.Resource):
     def get(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument("kisse_id")
+        args = parser.parse_args()
+
+        kisse = models.Kisse.query.get(args["kisse_id"])
+        return kisse.klyv()
 
 

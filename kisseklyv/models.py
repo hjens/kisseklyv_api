@@ -13,6 +13,9 @@ class Kisse(db.Model):
             "people": [person.as_dict() for person in self.people]
         }
 
+    def klyv(self):
+        return {"data": "test"}
+
     def __repr__(self):
         return f"Kisse (id={self.id}): {self.description}"
 
@@ -52,3 +55,4 @@ class Expense(db.Model):
 
     def __repr__(self):
         return f"Expense (id={self.id}): {self.description}"
+

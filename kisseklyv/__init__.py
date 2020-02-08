@@ -14,6 +14,8 @@ from kisseklyv import resources, models
 
 api.add_resource(resources.KisseResource, "/kisse")
 api.add_resource(resources.PersonResource, "/person")
+api.add_resource(resources.ExpenseResource, "/expense")
+api.add_resource(resources.KisseKlyvResource, "/kisseklyv")
 
 if __name__ == '__main__':
     app.run(port=5000)
