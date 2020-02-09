@@ -1,4 +1,3 @@
-from typing import List
 import unittest
 from kisseklyv import app, db
 

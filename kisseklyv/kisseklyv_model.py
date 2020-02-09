@@ -1,17 +1,37 @@
-from kisseklyv import calculate_klyv
-from kisseklyv import models
+from kisseklyv import calculate_klyv as klyv
 from typing import Dict
 
 
-def get_kisseklyv(kisse: models.Kisse) -> Dict:
+def get_kisseklyv(kisse) -> Dict:
     expenses, people = _get_expenses_and_people_from_model(kisse)
-    split = calculate_klyv.get_split(expenses, people)
+    split = klyv.get_split(expenses, people)
     return _get_json_output_from_split(split, kisse)
 
 
-def _get_expenses_and_people_from_model(kisse: models.Kisse):
-    return None, None
+def _get_expenses_and_people_from_model(kisse):
+    people = [person.name for person in kisse.people]
+    expenses = []
+    for person in kisse.people:
+        for expense in person.expenses:
+            expenses.append(klyv.Expense(payer=person.name,
+                                         amount=expense.amount))
+    return expenses, people
 
 
 def _get_json_output_from_split(split, kisse):
-    return {}
+    payments = []
+    user_id_name_map = {}
+    for person in kisse.people:
+        user_id_name_map[person.name] = person.id
+    for payment in split:
+        payments.append({
+            "payer_id": user_id_name_map[payment.payer],
+            "recipient_id": user_id_name_map[payment.recipient],
+            "amount": payment.amount
+        })
+    output = {
+        "object_type": "kisseklyv",
+        "kisse_id": kisse.id,
+        "payments": payments
+    }
+    return output

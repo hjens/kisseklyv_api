@@ -1,4 +1,5 @@
 from kisseklyv import db
+from kisseklyv import kisseklyv_model
 
 class Kisse(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,7 +15,7 @@ class Kisse(db.Model):
         }
 
     def klyv(self):
-        return {"data": "test"}
+        return kisseklyv_model.get_kisseklyv(self)
 
     def __repr__(self):
         return f"Kisse (id={self.id}): {self.description}"
