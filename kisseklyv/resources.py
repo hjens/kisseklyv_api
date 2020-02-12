@@ -189,6 +189,7 @@ class ExpenseResource(flask_restful.Resource):
 
 
 class KisseKlyvResource(flask_restful.Resource):
+    # TODO: hantera 404
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument("kisse_id")

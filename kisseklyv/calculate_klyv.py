@@ -1,18 +1,17 @@
 from typing import Dict, List
-from attr import dataclass
-
+import attr
 
 class KisseKlyvException(Exception):
     pass
 
 
-@dataclass
+@attr.dataclass
 class Expense:
     payer: str
     amount: float
 
 
-@dataclass
+@attr.dataclass
 class Payment:
     payer: str
     recipient: str
