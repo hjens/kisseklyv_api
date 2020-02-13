@@ -1,6 +1,8 @@
 FROM python:3.7.4-alpine
 
-RUN adduser --disabled-password --gecos '' kisseklyv_user
+#RUN adduser --disabled-password --gecos '' kisseklyv_user
+
+RUN adduser -D kisseklyv_user
 
 WORKDIR /home/kisseklyv_user
 
