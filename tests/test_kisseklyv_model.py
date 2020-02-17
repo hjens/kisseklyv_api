@@ -74,6 +74,10 @@ class TestKisseklyvModel(unittest.TestCase):
         output = kisseklyv_model.get_kisseklyv(kisse)
         self.assertEqual(expected_output, output)
 
+    def test_get_invalid_kisseklyv(self):
+        output = self.client.get("/kisseklyv?kisse_id=11")
+        self.assertEqual("404 NOT FOUND", output.status)
+
     def test_get_expenses_and_people_from_model(self):
         kisse = models.Kisse(id=1,
                              description="Testkisse",

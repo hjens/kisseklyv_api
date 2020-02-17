@@ -1,6 +1,5 @@
 import unittest
 from kisseklyv import calculate_klyv as klyv
-from kisseklyv import models
 import uuid
 import random
 
@@ -15,7 +14,7 @@ class TestCalculateKly(unittest.TestCase):
         expected_output = [
             klyv.Payment(payer="Bertil", recipient="Adam", amount=5)
         ]
-        output = klyv._get_split(expenses, people)
+        output = klyv.get_split(expenses, people)
         self.assertEqual(expected_output, output)
 
     def test_even_split(self):
@@ -29,21 +28,21 @@ class TestCalculateKly(unittest.TestCase):
         ]
         people = ["Adam", "Bertil", "Cesar"]
         expected_output = []
-        output = klyv._get_split(expenses, people)
+        output = klyv.get_split(expenses, people)
         self.assertEqual(expected_output, output)
 
     def test_single_person_split(self):
         expenses = []
         people = ["Adam"]
         expected_output = []
-        output = klyv._get_split(expenses, people)
+        output = klyv.get_split(expenses, people)
         self.assertEqual(expected_output, output)
 
     def test_empty_split(self):
         expenses = []
         people = []
         expected_output = []
-        output = klyv._get_split(expenses, people)
+        output = klyv.get_split(expenses, people)
         self.assertEqual(expected_output, output)
 
     def test_split_with_negative_payment(self):
@@ -53,7 +52,7 @@ class TestCalculateKly(unittest.TestCase):
         ]
         people = ["Adam", "Bertil"]
         with self.assertRaises(klyv.KisseKlyvException):
-            klyv._get_split(expenses, people)
+            klyv.get_split(expenses, people)
 
     def test_split_with_duplicate_people(self):
         expenses = [
@@ -62,7 +61,7 @@ class TestCalculateKly(unittest.TestCase):
         ]
         people = ["Adam", "Bertil", "Adam"]
         with self.assertRaises(klyv.KisseKlyvException):
-            klyv._get_split(expenses, people)
+            klyv.get_split(expenses, people)
 
     def test_split_with_invalid_payment(self):
         expenses = [
@@ -71,7 +70,7 @@ class TestCalculateKly(unittest.TestCase):
         ]
         people = ["Adam", "Bertil"]
         with self.assertRaises(klyv.KisseKlyvException):
-            klyv._get_split(expenses, people)
+            klyv.get_split(expenses, people)
 
     def test_random_splits(self):
         for i in range(100):
@@ -90,7 +89,7 @@ class TestCalculateKly(unittest.TestCase):
             return klyv.Expense(payer=payer, amount=amount)
         people = [random_name() for _ in range(num_people)]
         expenses = [random_expense(people) for _ in range(num_expenses)]
-        return people, expenses, klyv._get_split(expenses, people)
+        return people, expenses, klyv.get_split(expenses, people)
 
     def _verify_split(self, people, expenses, split):
         money_spent = {p: 0 for p in people}
