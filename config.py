@@ -7,3 +7,4 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL",
                                              "sqlite:///" + str(basedir / "app.db"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    HASHIDS_SALT = os.environ.get("HASHIDS_SALT", "secret_salt")

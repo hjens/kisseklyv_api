@@ -1,5 +1,6 @@
 from kisseklyv import db
 from kisseklyv import kisseklyv_model
+from kisseklyv import hashid
 
 class Kisse(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,10 +10,14 @@ class Kisse(db.Model):
     def as_dict(self):
         return {
             "object_type": "kisse",
-            "id": self.id,
+            "id": self.hashid,
             "description": self.description,
             "people": [person.as_dict() for person in self.people]
         }
+
+    @property
+    def hashid(self):
+        return hashid.get_hashid_from_id(self.id)
 
     def klyv(self):
         return kisseklyv_model.get_kisseklyv(self)

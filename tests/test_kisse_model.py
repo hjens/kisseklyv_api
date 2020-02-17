@@ -1,5 +1,6 @@
 import unittest
 from kisseklyv import app, db
+from kisseklyv import hashid
 
 class KisseModelTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -15,30 +16,32 @@ class KisseModelTest(unittest.TestCase):
         db.drop_all()
 
     def test_get_existing_kisse(self):
-        response = self.client.get("/kisse?id=1")
+        id = hashid.get_hashid_from_id(1)
+        response = self.client.get(f"/kisse?id={id}")
         expected_response = {"object_type": "kisse",
-                             "id": 1,
+                             "id": id,
                              "description": "testkisse",
                              "people": []}
         self.assertEqual(expected_response, response.get_json())
         self.assertEqual("200 OK", response.status)
 
     def test_get_nonexisting_kisse(self):
-        response = self.client.get("/kisse?id=11")
+        response = self.client.get("/kisse?id=x8P")
         self.assertEqual("404 NOT FOUND", response.status)
 
     def test_post_kisse(self):
         response = self.client.post("/kisse?description=testkisse2")
+        hash = hashid.get_hashid_from_id(2)
         expected_response = {"object_type": "kisse",
-                             "id": 2,
+                             "id": hash,
                              "description": "testkisse2",
                              "people": []}
         self.assertEqual(expected_response, response.get_json())
         self.assertEqual("201 CREATED", response.status)
 
-        response = self.client.get("/kisse?id=2")
+        response = self.client.get(f"/kisse?id={hash}")
         expected_response = {"object_type": "kisse",
-                             "id": 2,
+                             "id": hash,
                              "description": "testkisse2",
                              "people": []}
         self.assertEqual(expected_response, response.get_json())
@@ -52,7 +55,7 @@ class KisseModelTest(unittest.TestCase):
         self.assertEqual("200 OK", response.status)
 
     def test_put_nonexisting_kisse(self):
-        response = self.client.put("/kisse?id=11&description=updated")
+        response = self.client.put("/kisse?id=x8P&description=updated")
         self.assertEqual("404 NOT FOUND", response.status)
 
     def test_delete_existing_kisse(self):
@@ -63,5 +66,5 @@ class KisseModelTest(unittest.TestCase):
         self.assertEqual("204 NO CONTENT", response.status)
 
     def test_delete_nonexisting_kisse(self):
-        response = self.client.delete("/kisse?id=11")
+        response = self.client.delete("/kisse?id=x8P")
         self.assertEqual("404 NOT FOUND", response.status)

@@ -1,8 +1,8 @@
 import flask_restful
 from flask_restful import reqparse
-from kisseklyv import app
 from kisseklyv import models
 from kisseklyv import db
+from kisseklyv import hashid
 
 
 class KisseResource(flask_restful.Resource):
@@ -23,7 +23,8 @@ class KisseResource(flask_restful.Resource):
         parser.add_argument("description", required=True)
         args = parser.parse_args()
 
-        kisse = db.session.query(models.Kisse).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        kisse = db.session.query(models.Kisse).get(id)
         if kisse is not None:
             kisse.description = args["description"]
             db.session.commit()
@@ -37,7 +38,8 @@ class KisseResource(flask_restful.Resource):
         parser.add_argument("id", required=True)
         args = parser.parse_args()
 
-        kisse = db.session.query(models.Kisse).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        kisse = db.session.query(models.Kisse).get(id)
         if kisse is not None:
             db.session.delete(kisse)
             db.session.commit()
@@ -50,7 +52,8 @@ class KisseResource(flask_restful.Resource):
         parser.add_argument("id", required=True)
         args = parser.parse_args()
 
-        kisse = db.session.query(models.Kisse).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        kisse = db.session.query(models.Kisse).get(id)
         if kisse is not None:
             return kisse.as_dict()
         else:
