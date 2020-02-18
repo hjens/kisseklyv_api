@@ -3,6 +3,10 @@ from kisseklyv import kisseklyv_model
 from kisseklyv import models
 from kisseklyv import calculate_klyv as klyv
 from kisseklyv import app, db
+from kisseklyv import hashid
+
+ID1 = hashid.get_hashid_from_id(1)
+ID11 = hashid.get_hashid_from_id(11)
 
 class TestKisseklyvModel(unittest.TestCase):
     def setUp(self) -> None:
@@ -12,7 +16,7 @@ class TestKisseklyvModel(unittest.TestCase):
         db.create_all()
 
         self.client.post("/kisse?description=testkisse")
-        self.client.post("/person?name=Adam&kisse_id=1")
+        self.client.post(f"/person?name=Adam&kisse_id={ID1}")
 
     def tearDown(self) -> None:
         db.session.remove()
@@ -20,20 +24,20 @@ class TestKisseklyvModel(unittest.TestCase):
 
     def test_get_kisseklyv_resource(self):
         self.client.post("/kisse?description=middag")
-        self.client.post("/person?name=Adam&kisse_id=1")
-        self.client.post("/person?name=Bertil&kisse_id=1")
-        self.client.post("/person?name=Cesar&kisse_id=1")
-        self.client.post("/expense?person_id=1&amount=150&description=Mat")
-        klyv_response = self.client.get("/kisseklyv?kisse_id=1")
+        self.client.post(f"/person?name=Adam&kisse_id={ID1}")
+        self.client.post(f"/person?name=Bertil&kisse_id={ID1}")
+        self.client.post(f"/person?name=Cesar&kisse_id={ID1}")
+        self.client.post(f"/expense?person_id={ID1}&amount=150&description=Mat")
+        klyv_response = self.client.get(f"/kisseklyv?kisse_id={ID1}")
         expected_output = {
             "object_type": "kisseklyv",
-            "kisse_id": 1,
+            "kisse_id": ID1,
             "payments": [
-                {"payer_id": 2,
-                 "recipient_id": 1,
+                {"payer_id": hashid.get_hashid_from_id(2),
+                 "recipient_id": hashid.get_hashid_from_id(1),
                  "amount": 50},
-                {"payer_id": 3,
-                 "recipient_id": 1,
+                {"payer_id": hashid.get_hashid_from_id(3),
+                 "recipient_id": hashid.get_hashid_from_id(1),
                  "amount": 50}
             ]
         }
@@ -64,10 +68,10 @@ class TestKisseklyvModel(unittest.TestCase):
                              ])
         expected_output = {
             "object_type": "kisseklyv",
-            "kisse_id": 1,
+            "kisse_id": ID1,
             "payments": [
-                {"payer_id": 2,
-                 "recipient_id": 1,
+                {"payer_id": hashid.get_hashid_from_id(2),
+                 "recipient_id": hashid.get_hashid_from_id(1),
                  "amount": 5}
             ]
         }
@@ -75,7 +79,7 @@ class TestKisseklyvModel(unittest.TestCase):
         self.assertEqual(expected_output, output)
 
     def test_get_invalid_kisseklyv(self):
-        output = self.client.get("/kisseklyv?kisse_id=11")
+        output = self.client.get(f"/kisseklyv?kisse_id={ID11}")
         self.assertEqual("404 NOT FOUND", output.status)
 
     def test_get_expenses_and_people_from_model(self):
@@ -153,10 +157,10 @@ class TestKisseklyvModel(unittest.TestCase):
         ]
         expected_output = {
             "object_type": "kisseklyv",
-            "kisse_id": 1,
+            "kisse_id": ID1,
             "payments": [
-                {"payer_id": 2,
-                 "recipient_id": 1,
+                {"payer_id": hashid.get_hashid_from_id(2),
+                 "recipient_id": hashid.get_hashid_from_id(1),
                  "amount": 5}
             ]
         }

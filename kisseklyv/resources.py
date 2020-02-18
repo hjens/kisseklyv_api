@@ -205,7 +205,8 @@ class KisseKlyvResource(flask_restful.Resource):
         parser.add_argument("kisse_id")
         args = parser.parse_args()
 
-        kisse = models.Kisse.query.get(args["kisse_id"])
+        id = hashid.get_id_from_hashid(args["kisse_id"])
+        kisse = models.Kisse.query.get(id)
         if kisse is not None:
             return kisse.klyv()
         return "", 404
