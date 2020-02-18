@@ -67,10 +67,11 @@ class PersonResource(flask_restful.Resource):
         parser.add_argument("kisse_id")
         args = parser.parse_args()
 
+        kisse_id = hashid.get_id_from_hashid(args["kisse_id"])
         person = models.Person(name=args["name"],
-                               kisse_id=args["kisse_id"])
+                               kisse_id=kisse_id)
         if not self._person_kisse_exists(person):
-            return f"No Kisse with id {person.kisse_id} exists.", 400
+            return f"No Kisse with id {person.kisse_hashid} exists.", 400
         if not self._person_is_unique_within_kisse(person):
             return f"A person with the name {person.name} already exists in that Kisse.", 400
         else:
@@ -85,7 +86,8 @@ class PersonResource(flask_restful.Resource):
         parser.add_argument("id")
         args = parser.parse_args()
 
-        person = db.session.query(models.Person).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        person = db.session.query(models.Person).get(id)
         if person is not None:
             person.name = args["name"]
             db.session.commit()
@@ -98,7 +100,8 @@ class PersonResource(flask_restful.Resource):
         parser.add_argument("id", required=True)
         args = parser.parse_args()
 
-        person = db.session.query(models.Person).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        person = db.session.query(models.Person).get(id)
         if person is not None:
             db.session.delete(person)
             db.session.commit()
@@ -111,7 +114,8 @@ class PersonResource(flask_restful.Resource):
         parser.add_argument("id")
         args = parser.parse_args()
 
-        person = db.session.query(models.Person).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        person = db.session.query(models.Person).get(id)
         if person is not None:
             return person.as_dict()
         else:

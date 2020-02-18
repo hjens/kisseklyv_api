@@ -35,10 +35,18 @@ class Person(db.Model):
     def as_dict(self):
         return {
             "object_type": "person",
-            "id": self.id,
+            "id": self.hashid,
             "name": self.name,
-            "kisse_id": self.kisse_id
+            "kisse_id": self.kisse_hashid
         }
+
+    @property
+    def hashid(self):
+        return hashid.get_hashid_from_id(self.id)
+
+    @property
+    def kisse_hashid(self):
+        return hashid.get_hashid_from_id(self.kisse_id)
 
     def __repr__(self):
         return f"Person (id={self.id}): {self.name}. Kisse_id: {self.kisse_id}"
