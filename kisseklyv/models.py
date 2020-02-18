@@ -61,11 +61,19 @@ class Expense(db.Model):
     def as_dict(self):
         return {
             "object_type": "expense",
-            "id": self.id,
+            "id": self.hashid,
             "description": self.description,
             "amount": self.amount,
-            "person_id": self.person_id
+            "person_id": self.person_hashid
         }
+
+    @property
+    def hashid(self):
+        return hashid.get_hashid_from_id(self.id)
+
+    @property
+    def person_hashid(self):
+        return hashid.get_hashid_from_id(self.person_id)
 
     def __repr__(self):
         return f"Expense (id={self.id}): {self.description}"

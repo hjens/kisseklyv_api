@@ -139,11 +139,12 @@ class ExpenseResource(flask_restful.Resource):
         parser.add_argument("person_id", required=True)
         args = parser.parse_args()
 
+        person_id = hashid.get_id_from_hashid(args["person_id"])
         expense = models.Expense(description=args["description"],
                                  amount=args["amount"],
-                                 person_id=args["person_id"])
+                                 person_id=person_id)
         if not self._expense_person_exists(expense):
-            return f"No Person with id {expense.person_id} exists.", 400
+            return f"No Person with id {expense.person_hashid} exists.", 400
         else:
             db.session.add(expense)
             db.session.commit()
@@ -157,7 +158,8 @@ class ExpenseResource(flask_restful.Resource):
         parser.add_argument("amount")
         args = parser.parse_args()
 
-        expense = db.session.query(models.Expense).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        expense = db.session.query(models.Expense).get(id)
         if expense is not None:
             expense.description = args.get("description", expense.description)
             expense.amount = args.get("amount", expense.amount)
@@ -171,7 +173,8 @@ class ExpenseResource(flask_restful.Resource):
         parser.add_argument("id", required=True)
         args = parser.parse_args()
 
-        expense = db.session.query(models.Expense).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        expense = db.session.query(models.Expense).get(id)
         if expense is not None:
             db.session.delete(expense)
             db.session.commit()
@@ -184,7 +187,8 @@ class ExpenseResource(flask_restful.Resource):
         parser.add_argument("id")
         args = parser.parse_args()
 
-        expense = db.session.query(models.Expense).get(args["id"])
+        id = hashid.get_id_from_hashid(args["id"])
+        expense = db.session.query(models.Expense).get(id)
         if expense is not None:
             return expense.as_dict()
         else:
