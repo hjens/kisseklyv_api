@@ -83,7 +83,8 @@ class KisseModelTest(unittest.TestCase):
         expected_response = {"object_type": "person",
                              "id": person_id,
                              "kisse_id": ID1,
-                             "name": "Helge"}
+                             "name": "Helge",
+                             "expenses": []}
         self.assertEqual(expected_response, get_response.get_json())
         self.assertEqual("200 OK", get_response.status)
 

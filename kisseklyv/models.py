@@ -37,7 +37,8 @@ class Person(db.Model):
             "object_type": "person",
             "id": self.hashid,
             "name": self.name,
-            "kisse_id": self.kisse_hashid
+            "kisse_id": self.kisse_hashid,
+            "expenses": [expense.as_dict() for expense in self.expenses]
         }
 
     @property
