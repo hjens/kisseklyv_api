@@ -28,6 +28,8 @@ def _get_json_output_from_split(split, kisse):
         payments.append({
             "payer_id": user_id_name_map[payment.payer],
             "recipient_id": user_id_name_map[payment.recipient],
+            "payer_name": payment.payer,
+            "recipient_name": payment.recipient,
             "amount": payment.amount
         })
     output = {

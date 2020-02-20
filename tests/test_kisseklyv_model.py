@@ -35,9 +35,13 @@ class TestKisseklyvModel(unittest.TestCase):
             "payments": [
                 {"payer_id": hashid.get_hashid_from_id(2),
                  "recipient_id": hashid.get_hashid_from_id(1),
+                 "payer_name": "Bertil",
+                 "recipient_name": "Adam",
                  "amount": 50},
                 {"payer_id": hashid.get_hashid_from_id(3),
                  "recipient_id": hashid.get_hashid_from_id(1),
+                 "payer_name": "Cesar",
+                 "recipient_name": "Adam",
                  "amount": 50}
             ]
         }
@@ -72,6 +76,8 @@ class TestKisseklyvModel(unittest.TestCase):
             "payments": [
                 {"payer_id": hashid.get_hashid_from_id(2),
                  "recipient_id": hashid.get_hashid_from_id(1),
+                 "payer_name": "Bertil",
+                 "recipient_name": "Adam",
                  "amount": 5}
             ]
         }
@@ -161,6 +167,8 @@ class TestKisseklyvModel(unittest.TestCase):
             "payments": [
                 {"payer_id": hashid.get_hashid_from_id(2),
                  "recipient_id": hashid.get_hashid_from_id(1),
+                 "payer_name": "Bertil",
+                 "recipient_name": "Adam",
                  "amount": 5}
             ]
         }
